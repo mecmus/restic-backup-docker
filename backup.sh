@@ -27,6 +27,7 @@ logLast "RESTIC_TAG: ${RESTIC_TAG}"
 logLast "RESTIC_FORGET_ARGS: ${RESTIC_FORGET_ARGS}"
 logLast "RESTIC_JOB_ARGS: ${RESTIC_JOB_ARGS}"
 logLast "RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}"
+logLast "RESTIC_REPOSITORY_FILE: ${RESTIC_REPOSITORY_FILE!?"empty"} : $(cat ${RESTIC_REPOSITORY_FILE})"
 logLast "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
 
 # Do not save full backup log to logfile but to backup-last.log
