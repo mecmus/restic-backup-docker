@@ -7,7 +7,7 @@ RUN unzip rclone-current-linux-amd64.zip && mv rclone-*-linux-amd64/rclone /bin/
 FROM restic/restic:0.12.0
 
 # install mailx
-RUN apk add --update --no-cache heirloom-mailx fuse mysql-client bash
+RUN apk add --update --no-cache heirloom-mailx fuse mysql-client bash py3-pip; pip install crestic
 
 COPY --from=rclone /bin/rclone /bin/rclone
 
