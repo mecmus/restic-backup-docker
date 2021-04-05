@@ -17,21 +17,25 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # extract branch name
-    - name: Extract branch name
-      if: github.event_name != 'pull_request'
-      shell: bash
-      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_REF#refs/*/} --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker
-
-    # extract branch name on pull request
-    - name: Print branch name
-      if: github.event_name == 'pull_request'
-      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_HEAD_REF}
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-    - name: Docker Push
-      run: docker push mecmus/restic-backup-docker
+    # Build and publish on master releases
+    - name: Build and publish on master releases
+      if: github.event_name != 'pull_request'
+      shell: bash
+      run: |
+        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_REF#refs/*/} --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker
+        docker push ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_REF#refs/*/}
+        docker push ${{secrets.DOCKER_USERNAME}}/restic-backup-docker
+
+    # Build and publish on pull request
+    - name: Build and publish on pull request
+      if: github.event_name == 'pull_request'
+      run: |
+        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_HEAD_REF}
+        docker push ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_HEAD_REF}
+
