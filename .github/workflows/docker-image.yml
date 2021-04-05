@@ -38,4 +38,5 @@ jobs:
       run: |
         docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_HEAD_REF}
         docker push ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${GITHUB_HEAD_REF}
+        
 
