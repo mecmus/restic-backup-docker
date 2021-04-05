@@ -1,7 +1,5 @@
 # Changelog
 
-test
-
 ## 1.3.1-0.9.6
 
 ### Changed
