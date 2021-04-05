@@ -23,14 +23,14 @@ jobs:
       shell: bash
       run: |
         echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-        docker build . --file Dockerfile --tag mecmus/restic-backup-docker:$TAG --tag mecmus/restic-backup-docker
+        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:$TAG --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker
 
     # extract branch name on pull request
     - name: Print branch name
       if: github.event_name == 'pull_request'
       run: |
         echo "BRANCH_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-        docker build . --file Dockerfile --tag mecmus/restic-backup-docker:$BRANCH_NAME
+        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:$BRANCH_NAME
 
     - name: docker login
       env:
