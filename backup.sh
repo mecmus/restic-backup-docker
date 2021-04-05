@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 lastLogfile="/var/log/backup-last.log"
 lastMailLogfile="/var/log/mail-last.log"
@@ -17,7 +17,11 @@ if [ -f "/hooks/pre-backup.sh" ]; then
 else
     echo "Pre-backup script not found ..."
 fi
-
+if [[ ${RESTIC_REPOSITORY_FILE} != "" && -s ${RESTIC_REPOSITORY_FILE} ]]; then
+    RESTIC_REPOSITORY_FILE_CONTENT=$(cat ${RESTIC_REPOSITORY_FILE})
+else
+    RESTIC_REPOSITORY_FILE_CONTENT="empty"
+fi
 start=`date +%s`
 rm -f ${lastLogfile} ${lastMailLogfile}
 echo "Starting Backup at $(date +"%Y-%m-%d %H:%M:%S")"
@@ -27,6 +31,7 @@ logLast "RESTIC_TAG: ${RESTIC_TAG}"
 logLast "RESTIC_FORGET_ARGS: ${RESTIC_FORGET_ARGS}"
 logLast "RESTIC_JOB_ARGS: ${RESTIC_JOB_ARGS}"
 logLast "RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}"
+logLast "RESTIC_REPOSITORY_FILE: ${RESTIC_REPOSITORY_FILE?"empty"} : ${RESTIC_REPOSITORY_FILE_CONTENT}"
 logLast "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
 
 # Do not save full backup log to logfile but to backup-last.log
