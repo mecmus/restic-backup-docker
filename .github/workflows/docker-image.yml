@@ -29,6 +29,7 @@ jobs:
     - name: Print branch name
       if: github.event_name == 'pull_request'
       run: |
+        echo "BRANCH_NAME=${GITHUB_HEAD_REF}"
         echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
         docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${{ env.BRANCH_NAME }}
     - name: docker login
