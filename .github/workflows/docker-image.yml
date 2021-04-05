@@ -21,8 +21,9 @@ jobs:
     - name: Extract branch name
       if: github.event_name != 'pull_request'
       shell: bash
-      run: echo "::set-env name=TAG::$(echo ${GITHUB_REF#refs/*/})"
-      docker build . --file Dockerfile --tag mecmus/restic-backup-docker:$TAG --tag mecmus/restic-backup-docker
+      run: |
+        echo "::set-env name=TAG::$(echo ${GITHUB_REF#refs/*/})"
+        docker build . --file Dockerfile --tag mecmus/restic-backup-docker:$TAG --tag mecmus/restic-backup-docker
 
     # extract branch name on pull request
     - name: Print branch name
@@ -36,6 +37,6 @@ jobs:
         DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      
+
     - name: Docker Push
       run: docker push mecmus/restic-backup-docker
