@@ -22,16 +22,15 @@ jobs:
       if: github.event_name != 'pull_request'
       shell: bash
       run: |
-        echo "TAG=${{GITHUB_REF#refs/*/}}" >> $GITHUB_ENV
-        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:$TAG --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker
+        echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${{ env.TAG }} --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker
 
     # extract branch name on pull request
     - name: Print branch name
       if: github.event_name == 'pull_request'
       run: |
-        echo "BRANCH_NAME=${{GITHUB_HEAD_REF}}" >> $GITHUB_ENV
-        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:$BRANCH_NAME
-
+        echo "BRANCH_NAME=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
+        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/restic-backup-docker:${{ env.BRANCH_NAME }}
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
